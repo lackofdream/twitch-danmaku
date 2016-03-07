@@ -1,6 +1,17 @@
+(function() {
 
 	// show icon
 	chrome.runtime.sendMessage({action: "showIcon"}, function(response) {});
+
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+		if (request.action == "stateChange") {
+			stopDanmaku();
+			isChatReady = false;
+			isPlayerReady = false;
+			init();
+		}
+	});
+	var testCounter = 0;
 	MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 	var chkActionItv = null;
@@ -65,10 +76,14 @@
 	/****************************************************************/
 	
 	$( document ).ready(function () {
+		init();
+	});
+
+	function init () {
 		chkActionItv = setInterval(insertToggleBtn, 500);
 		chkChatItv = setInterval(checkChat, 500);
 		chkPlayerItv = setInterval(checkPlayer, 500);
-	});
+	}
 
 	function checkPlayer () {
 		if ( $("#player").length ) {
@@ -97,12 +112,9 @@
 
     function toggleDanmu () {
     	if (isDanmakuOn) {
-    		isDanmakuOn = false;
-    		chatOb.disconnect();
-    		$(".player-fullscreen-overlay").text(" ");
+    		stopDanmaku();
     		$( "#dmTogglelBtn span" ).text("Turn Danmaku ON");
     	} else {
-    		isDanmakuOn = true;
     		startDanmaku();
     		$( "#dmTogglelBtn span" ).text("Turn Danmaku OFF");
     	}
@@ -135,6 +147,8 @@
 
     function startDanmaku () {
     	console.log("Start Danmaku.");
+    	isDanmakuOn = true;
+    	
        	var chatRoom = document.querySelector('.chat-lines');
     	if ( chatRoom !== null ) {
     		console.log("Start observing.");
@@ -142,3 +156,11 @@
     	}
     }
 
+    function stopDanmaku () {
+    	console.log("Stop Danmaku.");
+    	isDanmakuOn = false;
+		chatOb.disconnect();
+		$(".player-fullscreen-overlay").text(" ");
+    }
+
+})();
