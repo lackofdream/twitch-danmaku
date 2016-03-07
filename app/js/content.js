@@ -1,4 +1,4 @@
-(function() {
+
 	// show icon
 	chrome.runtime.sendMessage({action: "showIcon"}, function(response) {});
 	MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -30,9 +30,36 @@
 	/************************************************************/
 
 	/********************** Danmaku dispatcher **********************/
-	var dmDispatcher = function (argument) {
-		// body...
+	var dmDispatcher = function () {
+		this.containerH = $(".player-fullscreen-overlay").clientHeight;
+		this.containerW = $(".player-fullscreen-overlay").clientWidth;
+
+		this.tracks = new Array(Math.floor(this.containerH/25));
+		for (var i = 0; i < this.tracks.length; i++) {
+			this.tracks[i] = {
+				ready: true,
+				queue: []
+			}
+		}
 	}
+
+	dmDispatcher.prototype.run = function() {
+		// body...
+	};
+
+	dmDispatcher.prototype.enterQ = function(dm) {
+		var findOneSpot = false;
+		for (var i = 0; i < this.tracks.length; i++) {
+			if (this.tracks[i].ready) {
+				this.tracks[i].queue.push(dm);
+				findOneSpot = true;
+				break;
+			}
+		}
+		if (!findOneSpot) {
+			this.tracks[Math.floor(Math.random()*this.tracks.length)].queue(push);
+		}
+	};
 
 
 	/****************************************************************/
@@ -115,4 +142,3 @@
     	}
     }
 
-})();
