@@ -20,7 +20,14 @@
     "default_title": "Twitch Danmaku"
   },
 
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": false
+  },
+
   "permissions": [
+    "tabs",
+    "webNavigation",
     "http://*.twitch.tv/*"
   ],
 
