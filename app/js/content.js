@@ -39,8 +39,8 @@
 	}
 
 	Danmaku.prototype.updateMarkup = function(top, left) {
-		this.markUp = "<span id='this.id' class='danmaku-item'"+
-			" style='color:"+ this.color +";top="+top+"px;left="+left+"px;'>"+ this.content +"</span>";
+		this.markUp = "<span id='"+this.id+"' class='danmaku-item'"+
+			" style='color:"+ this.color +";top:"+top+"px;left:"+left+"px;'>"+ this.content +"</span>";
 	}
 
 	Danmaku.prototype.putOnScreen = function() {
@@ -82,14 +82,31 @@
 		dm.putOnScreen();
 		var currentWaitTime = this.tracks[idx].waitTime;
 		var dmLength = $("#"+dm.id).width();
-		this.tracks[idx].waitTime += (dmLength/(this.containerW/10000));
+		var thisDmWaitTime = dmLength/(this.containerW/10000);
+		this.tracks[idx].waitTime += thisDmWaitTime;
 		var scrollLength = dmLength + this.containerW;
 		$("#"+dm.id)
 			.delay(currentWaitTime)
 			.animate({
 				"left": "-="+scrollLength+"px"
 			},{
+				specialEasing: {
+					left: "linear"
+				},
 				duration: 10000,
+				start: function () {
+					var startTime = new Date().getTime();
+					var interval = setInterval(function(){
+						this.tracks[idx].ready = false;
+					    if(new Date().getTime() - startTime > thisDmWaitTime){
+					    	this.tracks[idx].ready = true;
+					        clearInterval(interval);
+					        return;
+					    }
+					    this.tracks[idx].waitTime -= 1000;
+					}, 1000); 
+					
+				},
 				complete: function () { $(this).remove(); }
 			});
 	};
