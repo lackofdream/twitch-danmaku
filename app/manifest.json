@@ -34,7 +34,8 @@
   "content_scripts": [
     {
       "matches": [
-        "http://www.twitch.tv/*"
+        "http://www.twitch.tv/*",
+        "https://www.twitch.tv/*"
       ],
       "css": [
         "css/content.css"

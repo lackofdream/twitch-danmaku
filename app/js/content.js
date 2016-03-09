@@ -33,14 +33,14 @@
 	var Danmaku = function (basicInfo) {
 		this.color = basicInfo.color;
 		this.content = basicInfo.content;
-		this.speed = 50;
+		this.dmLength = basicInfo.dmLength;
 		this.id = "dm" + Date.now();
 		this.markUp = "<span>I am a moe danmaku.</span>";
 	}
 
 	Danmaku.prototype.updateMarkup = function(top, left) {
-		this.markUp = "<span id='"+this.id+"' class='danmaku-item'"+
-			" style='color:"+ this.color +";top:"+top+"px;left:"+left+"px;'>"+ this.content +"</span>";
+		this.markUp = "<div id='"+this.id+"' class='danmaku-item'"+
+			" style='color:"+ this.color +";top:"+top+"px;left:"+left+"px;width:"+this.dmLength+"px;'>"+ this.content +"</div>";
 	}
 
 	Danmaku.prototype.putOnScreen = function() {
@@ -65,49 +65,54 @@
 	}
 
 	DMDispatcher.prototype.enterQ = function(dm) {
+		var that = this; // a reference to tracks, will be used in animation callbacks.
+		var containerW = $(".player-fullscreen-overlay").width();
+
 		var findOneSpot = false;
 		var idx = 0;
-		for (var i = 0; i < this.tracks.length; i++) {
-			if (this.tracks[i].ready) {
+		for (var i = 0; i < that.tracks.length; i++) {
+			if (that.tracks[i].ready) {
 				idx = i;
 				findOneSpot = true;
 				break;
 			}
 		}
 		if (!findOneSpot) {
-			idx = Math.floor(Math.random()*this.tracks.length);
+			idx = Math.floor(Math.random()*that.tracks.length);
 		}
-		dm.top = this.tracks[idx].top;
-		dm.updateMarkup(this.tracks[idx].top, this.containerW);
+		var currentTrack = that.tracks[idx];
+		dm.top = currentTrack.top;
+		dm.updateMarkup(currentTrack.top, containerW);
 		dm.putOnScreen();
-		var currentWaitTime = this.tracks[idx].waitTime;
-		var dmLength = $("#"+dm.id).width();
-		var thisDmWaitTime = dmLength/(this.containerW/10000);
-		this.tracks[idx].waitTime += thisDmWaitTime;
-		var scrollLength = dmLength + this.containerW;
+		var currentWaitTime = currentTrack.waitTime;
+		//var dm.dmLength = $("#"+dm.id).width();
+		var multiplier = dm.dmLength/600;
+		multiplier = multiplier<0.9?0.9:multiplier;	// min speed for short text
+		multiplier = multiplier>1.5?1.5:multiplier; //max speed for long text
+		var dur = 15000 * multiplier;
+		
+		var thisDmWaitTime = dm.dmLength/(containerW/dur);
+		currentTrack.waitTime += thisDmWaitTime;
+		var scrollLength = dm.dmLength + containerW;
+		
 		$("#"+dm.id)
-			.delay(currentWaitTime)
 			.animate({
 				"left": "-="+scrollLength+"px"
 			},{
 				specialEasing: {
 					left: "linear"
 				},
-				duration: 10000,
+				duration: dur,
 				start: function () {
-					var startTime = new Date().getTime();
-					var interval = setInterval(function(){
-						this.tracks[idx].ready = false;
-					    if(new Date().getTime() - startTime > thisDmWaitTime){
-					    	this.tracks[idx].ready = true;
-					        clearInterval(interval);
-					        return;
-					    }
-					    this.tracks[idx].waitTime -= 1000;
-					}, 1000); 
-					
+					currentTrack.ready = false;
+					setTimeout(function () {
+						currentTrack.waitTime -= thisDmWaitTime;
+						currentTrack.ready = true;
+					}, thisDmWaitTime);
 				},
-				complete: function () { $(this).remove(); }
+				complete: function () {
+					$("#"+dm.id).remove();
+				}
 			});
 	};
 
@@ -149,12 +154,13 @@
     }
 
     function toggleDanmu () {
+    	isDanmakuOn = !isDanmakuOn;
     	if (isDanmakuOn) {
-    		stopDanmaku();
-    		$( "#dmTogglelBtn span" ).text("Turn Danmaku ON");
-    	} else {
-    		startDanmaku();
     		$( "#dmTogglelBtn span" ).text("Turn Danmaku OFF");
+    		startDanmaku();
+    	} else {
+    		$( "#dmTogglelBtn span" ).text("Turn Danmaku ON");
+    		stopDanmaku();
     	}
     }
 
@@ -171,11 +177,12 @@
 							content: currNode.querySelector("li .message").innerHTML
 						}
 						// calculate danmaku length
-						// var emojiCount = currNode.querySelector("li .message").querySelectorAll("img").length;
-						// var pureTextLength = currNode.querySelector("li .message").textContent.length;
-						// newDanmaku.dmLength =  pureTextLength + emojiCount*2;
-						disp.enterQ(new Danmaku(newDanmaku));
-						//new Danmaku(newDanmaku).emit();
+						var emojiCount = currNode.querySelector("li .message").querySelectorAll("img").length;
+						var pureTextLength = currNode.querySelector("li .message").textContent.length;
+						newDanmaku.dmLength =  (pureTextLength + emojiCount*4)*22; //22 = fontsize
+						if (isDanmakuOn) {
+							disp.enterQ(new Danmaku(newDanmaku));
+						}
 					}
 				};
 			};
@@ -184,7 +191,6 @@
 
     function startDanmaku () {
     	console.log("Start Danmaku.");
-    	isDanmakuOn = true;
     	disp = new DMDispatcher();
        	var chatRoom = document.querySelector('.chat-lines');
     	if ( chatRoom !== null ) {
@@ -195,8 +201,8 @@
 
     function stopDanmaku () {
     	console.log("Stop Danmaku.");
-    	isDanmakuOn = false;
 		chatOb.disconnect();
+		disp = null;
 		$(".player-fullscreen-overlay").text(" ");
     }
 

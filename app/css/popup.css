@@ -5,37 +5,3 @@ body {
 	background-color: #6441A5;
 	color: white;
 }
-
-/*swtich style*/
-.onoffswitch {
-    position: relative; width: 55px;
-    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
-}
-.onoffswitch-checkbox {
-    display: none;
-}
-.onoffswitch-label {
-    display: block; overflow: hidden; cursor: pointer;
-    height: 29px; padding: 0; line-height: 29px;
-    border: 2px solid #CCCCCC; border-radius: 29px;
-    background-color: #A39B9B;
-    transition: background-color 0.3s ease-in;
-}
-.onoffswitch-label:before {
-    content: "";
-    display: block; width: 29px; margin: 0px;
-    background: #FFFFFF;
-    position: absolute; top: 0; bottom: 0;
-    right: 24px;
-    border: 2px solid #CCCCCC; border-radius: 29px;
-    transition: all 0.3s ease-in 0s; 
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label {
-    background-color: #712BD9;
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
-   border-color: #712BD9;
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label:before {
-    right: 0px; 
-}
