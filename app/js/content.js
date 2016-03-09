@@ -16,7 +16,12 @@
 
 	var chkActionItv = null;
 	var chkChatItv = null;
-	var chkPlayerItv = null
+	var chkPlayerItv = null;
+	var chkHeightItv = null;
+
+	var containerH=0;
+	var containerW=0;
+	var tracks = null;
 
 	var isChatReady = false;
 	var isPlayerReady = false;
@@ -24,8 +29,6 @@
 
 	var chatOb = new MutationObserver(newChatMsgHandler);
 	var chatObConfig = { childList: true };
-
-	var disp = null;
 
 	var dmBtn = "<span><a class='button primary dark' id='dmTogglelBtn'><span>Turn Danmaku OFF</span></a></span>"
 
@@ -50,37 +53,52 @@
 	/************************************************************/
 
 	/********************** Danmaku dispatcher **********************/
-	var DMDispatcher = function () {
-		this.containerH = $(".player-fullscreen-overlay").height();
-		this.containerW = $(".player-fullscreen-overlay").width();
 
-		this.tracks = new Array(Math.floor(this.containerH/25));
-		for (var i = 0; i < this.tracks.length; i++) {
-			this.tracks[i] = {
+	function initTracks() {
+		if (isPlayerReady) {
+			containerH = $(".player-fullscreen-overlay").height();
+			containerW = $(".player-fullscreen-overlay").width();
+
+			tracks = new Array(Math.floor(containerH/25));
+			for (var i = 0; i < tracks.length; i++) {
+				tracks[i] = {
+					ready: true,
+					waitTime: 0,
+					top: i*25 + 15
+				}
+			}
+		}
+	}
+
+	function updateTracks () {
+		stopDanmaku();
+		tracks = new Array(Math.floor(containerH/25));
+		for (var i = 0; i < tracks.length; i++) {
+			tracks[i] = {
 				ready: true,
 				waitTime: 0,
 				top: i*25 + 15
 			}
 		}
+		startDanmaku();
 	}
 
-	DMDispatcher.prototype.enterQ = function(dm) {
-		var that = this; // a reference to tracks, will be used in animation callbacks.
-		var containerW = $(".player-fullscreen-overlay").width();
+	function pushDanmaku(dm) {
+		containerW = $(".player-fullscreen-overlay").width();
 
 		var findOneSpot = false;
 		var idx = 0;
-		for (var i = 0; i < that.tracks.length; i++) {
-			if (that.tracks[i].ready) {
+		for (var i = 0; i < tracks.length; i++) {
+			if (tracks[i].ready) {
 				idx = i;
 				findOneSpot = true;
 				break;
 			}
 		}
 		if (!findOneSpot) {
-			idx = Math.floor(Math.random()*that.tracks.length);
+			idx = Math.floor(Math.random()*tracks.length);
 		}
-		var currentTrack = that.tracks[idx];
+		var currentTrack = tracks[idx];
 		dm.top = currentTrack.top;
 		dm.updateMarkup(currentTrack.top, containerW);
 		dm.putOnScreen();
@@ -132,7 +150,16 @@
 		if ( $("#player").length ) {
     		clearInterval(chkPlayerItv);
     		isPlayerReady = true;
+    		initTracks();
     	};
+	}
+
+	function chkHeight () {
+		var currentHeight = $(".player-fullscreen-overlay").height();
+		if (currentHeight!==containerH) {
+			containerH = currentHeight;
+			updateTracks();
+		}
 	}
 
 	function checkChat () {
@@ -181,7 +208,7 @@
 						var pureTextLength = currNode.querySelector("li .message").textContent.length;
 						newDanmaku.dmLength =  (pureTextLength + emojiCount*4)*22; //22 = fontsize
 						if (isDanmakuOn) {
-							disp.enterQ(new Danmaku(newDanmaku));
+							pushDanmaku(new Danmaku(newDanmaku));
 						}
 					}
 				};
@@ -191,18 +218,18 @@
 
     function startDanmaku () {
     	console.log("Start Danmaku.");
-    	disp = new DMDispatcher();
        	var chatRoom = document.querySelector('.chat-lines');
     	if ( chatRoom !== null ) {
     		console.log("Start observing.");
     		chatOb.observe(chatRoom, chatObConfig);
     	}
+    	chkHeightItv = setInterval(chkHeight, 500);
     }
 
     function stopDanmaku () {
     	console.log("Stop Danmaku.");
+    	clearInterval(chkHeightItv);
 		chatOb.disconnect();
-		disp = null;
 		$(".player-fullscreen-overlay").text(" ");
     }
 
