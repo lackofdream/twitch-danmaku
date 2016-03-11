@@ -1,7 +1,139 @@
 body {
 	margin: 0;
-	min-width: 200px;
-	text-align: center;
+	padding: 0;
+}
+a:link {text-decoration: none;}
+
+a:visited {text-decoration: none;}
+
+a:hover {text-decoration: none;}
+
+a:active {text-decoration: none;}
+
+.main {
+	width: 320px;
+	height: 520px;
 	background-color: #6441A5;
 	color: white;
+	font-size: 14px;
+	font-weight: bold;
+	display: flex;
+	flex-direction: column;
+	line-height: 20px;
+}
+
+.title {
+	text-align: center;
+}
+
+.dm-color {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	width: 100%;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #FFEB3B;
+}
+.color-mode-label{
+	align-self: center;
+}
+
+.or {
+	font-weight: normal;
+	padding: 10px 0;
+}
+
+.donation {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #FFEB3B;
+}
+
+.paypal {
+	align-self: center;
+}
+
+.paypal span {
+	background-color: #E0E0E0;
+	color: #212121;
+	border-radius: 5px;
+	font-weight: normal;
+	vertical-align: middle;
+	cursor: pointer;
+	padding: 1px 3px;
+}
+
+.paypal span img {
+	height: 16px;
+	vertical-align: bottom;
+}
+
+.alipay {
+	width: 62%;
+	align-self: center;
+}
+.alipay img {
+	background-color: white;
+	width: 100%;
+}
+
+.support {
+	align-self: center;
+	width: 80%;
+	font-weight: normal;
+	font-size: 12px;
+	color: #E0E0E0;
+}
+
+.support a:link, a:visited, a:hover, a:active {
+    color: #FFEB3B;
+}
+
+.onoffswitch {
+    position: relative; width: 147px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999; border-radius: 20px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 27px; padding: 0; line-height: 27px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "Colorful Mode";
+    padding-left: 12px;
+    background-color: #AB0AC7; color: #F2EB16;
+}
+.onoffswitch-inner:after {
+    content: "Single Color";
+    padding-right: 12px;
+    background-color: #6B6A6A; color: #FFFFFF;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block; width: 20px; margin: 3.5px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 116px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
 }

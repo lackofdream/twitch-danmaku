@@ -3,9 +3,53 @@
   <head>
     <meta charset="UTF-8">
     <title>Twitch Danmaku</title>
+    <link rel="stylesheet" href="../css/spectrum.css">
     <link rel="stylesheet" href="../css/popup.css">
   </head>
   <body>
-    <h3>Twitch Danmaku is running!</h3>
+    <div class="main">
+      <h3 class="title">Twitch Danmaku is running!</h3>
+
+      <div class="dm-color">
+        <label class="color-mode-label">Color Mode:</label>
+        <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+            <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
+
+        <input type='text' id='dm-color'/>
+      </div>
+
+      <div class="donation">
+        <h3 class="donation-title">If you like this extension</h3>
+        <div class="paypal">
+          <a href="https://www.paypal.me/ShaneXie" target="_blank">
+            <span><img src="../assets/paypal.png">Buy me a coffee</span>
+          </a> via Paypal.Me
+        </div>
+
+        <div class="or">Or Scan the following QR code</div>
+
+        <fieldset class="alipay">
+          <legend>Alipay[支付宝]</legend>
+          <img src="../assets/alipay.png">
+        </fieldset>
+      </div>
+
+      <div class="support">
+        <span class="support-msg">
+          If you find any bugs or have some questions or suggestions, please leave a comment <a href="http://430.io/twitch-danmaku-chrome-extension/" target="_blank">Here</a>
+        </span>
+      </div>
+
+    </div>
+
+    <script src="../js/jquery-2.2.1.min.js"></script>
+    <script src="../js/spectrum.js"></script>
+    <script src="../js/popup.js"></script>
+    
   </body>
 </html>

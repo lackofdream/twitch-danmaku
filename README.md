@@ -9,5 +9,4 @@ Or, download the [crx file](./twitchDanmaku.crx) then drag and install in [chrom
 ## Todo
 * fix chinese width problem
 * choose danmaku color
-* bug report link
-* coffee me link
+
