@@ -4,14 +4,21 @@
 	chrome.runtime.sendMessage({action: "showIcon"}, function(response) {});
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		if (request.action == "stateChange") {
+		if (request.action === "stateChange") {
 			stopDanmaku();
 			isChatReady = false;
 			isPlayerReady = false;
 			init();
 		}
+
+		if (request.action === "updateColor") {
+			updateColor(request.isCorlorful, request.color);
+		}		
 	});
-	var testCounter = 0;
+
+	var isCorlorful = true;
+	var singleColor = "#fff";
+
 	MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 	var chkActionItv = null;
@@ -34,7 +41,7 @@
 
 	/***************Construct Danmaku Object*********************/
 	var Danmaku = function (basicInfo) {
-		this.color = basicInfo.color;
+		this.color = isCorlorful?basicInfo.color:singleColor;
 		this.content = basicInfo.content;
 		this.dmLength = basicInfo.dmLength;
 		this.id = "dm" + Date.now();
@@ -144,6 +151,22 @@
 		chkActionItv = setInterval(insertToggleBtn, 500);
 		chkChatItv = setInterval(checkChat, 500);
 		chkPlayerItv = setInterval(checkPlayer, 500);
+		queryColor();
+	}
+
+	function queryColor () {
+		chrome.runtime.sendMessage({action: "queryColor"}, function(response) {});
+	}
+
+	function updateColor (isClrfl, clr) {
+		isCorlorful = isClrfl;
+		singleColor = clr;
+		if (!isCorlorful) {
+			var currentItems = $(".danmaku-item");
+			if (currentItems.length) {
+				currentItems.css('color', singleColor);
+			};
+		};
 	}
 
 	function checkPlayer () {
@@ -208,7 +231,6 @@
 						var pureText = currNode.querySelector("li .message").textContent;
 						var pureTextLength = pureText.length;
 						var fontsize = /[\u3400-\u9FBF]/.test(pureText)?35:22;
-						console.log(fontsize);
 						newDanmaku.dmLength =  (pureTextLength + emojiCount*4)*fontsize; //22 = fontsize
 						if (isDanmakuOn) {
 							pushDanmaku(new Danmaku(newDanmaku));

@@ -13,4 +13,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.action == "showIcon") {
 		chrome.pageAction.show(sender.tab.id);
 	}
+
+	if (request.action == "queryColor") {
+		console.log("got queryColor");
+		chrome.storage.sync.get(['isCorlorful','color'], function(object) {
+			var isCorlorful = object.isCorlorful===undefined?true:object.isCorlorful;
+			var color = object.color?object.color:"#fff";
+			chrome.tabs.sendMessage(sender.tab.id, 
+	        	{action:"updateColor", isCorlorful:isCorlorful, color:color},
+	        	function(response){}
+	        );
+		});
+	}
 });
