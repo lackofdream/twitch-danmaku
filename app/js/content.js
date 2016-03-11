@@ -59,12 +59,12 @@
 			containerH = $(".player-fullscreen-overlay").height();
 			containerW = $(".player-fullscreen-overlay").width();
 
-			tracks = new Array(Math.floor(containerH/25));
+			tracks = new Array(Math.floor(containerH/28));
 			for (var i = 0; i < tracks.length; i++) {
 				tracks[i] = {
 					ready: true,
 					waitTime: 0,
-					top: i*25 + 15
+					top: i*28 + 15
 				}
 			}
 		}
@@ -72,12 +72,12 @@
 
 	function updateTracks () {
 		stopDanmaku();
-		tracks = new Array(Math.floor(containerH/25));
+		tracks = new Array(Math.floor(containerH/28));
 		for (var i = 0; i < tracks.length; i++) {
 			tracks[i] = {
 				ready: true,
 				waitTime: 0,
-				top: i*25 + 15
+				top: i*28 + 15
 			}
 		}
 		startDanmaku();
@@ -205,8 +205,11 @@
 						}
 						// calculate danmaku length
 						var emojiCount = currNode.querySelector("li .message").querySelectorAll("img").length;
-						var pureTextLength = currNode.querySelector("li .message").textContent.length;
-						newDanmaku.dmLength =  (pureTextLength + emojiCount*4)*22; //22 = fontsize
+						var pureText = currNode.querySelector("li .message").textContent;
+						var pureTextLength = pureText.length;
+						var fontsize = /[\u3400-\u9FBF]/.test(pureText)?35:22;
+						console.log(fontsize);
+						newDanmaku.dmLength =  (pureTextLength + emojiCount*4)*fontsize; //22 = fontsize
 						if (isDanmakuOn) {
 							pushDanmaku(new Danmaku(newDanmaku));
 						}
