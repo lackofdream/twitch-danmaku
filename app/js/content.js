@@ -144,7 +144,9 @@
 	/****************************************************************/
 	
 	$( document ).ready(function () {
-		init();
+		if(checkCurrURL()){
+			init();
+		}
 	});
 
 	function init () {
@@ -152,6 +154,12 @@
 		chkChatItv = setInterval(checkChat, 500);
 		chkPlayerItv = setInterval(checkPlayer, 500);
 		queryColor();
+	}
+
+	function checkCurrURL () {
+		var url = window.location.href;
+		var length = url.split('/').length;
+		return length===4 && url[3]!="";
 	}
 
 	function queryColor () {
@@ -170,9 +178,10 @@
 	}
 
 	function checkPlayer () {
-		if ( $("#player").length ) {
+		if ( $(".player-fullscreen-overlay").length ) {
     		clearInterval(chkPlayerItv);
     		isPlayerReady = true;
+    		console.log("checkPlayer.....");
     		initTracks();
     	};
 	}
@@ -189,6 +198,7 @@
 		if ( $(".chat-lines").length ) {
     		clearInterval(chkChatItv);
     		isChatReady = true;
+    		console.log("checkChat.....");
     		startDanmaku();
     	};
 	}
