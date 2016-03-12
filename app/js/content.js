@@ -227,18 +227,25 @@
     function newChatMsgHandler (mutations) {
     	mutations.forEach(function(mutation) {
     		var numOfNodeAdded = mutation.addedNodes.length;
-    		var currNode= null;
+    		
 			if ( numOfNodeAdded > 0) {
 				for (var i = 0; i < numOfNodeAdded; i++) {
+					var currNode= null;
 					if (mutation.addedNodes[i].className === 'ember-view') {
+						currNode = mutation.addedNodes[i].querySelector("li");
+					} else if (mutation.addedNodes[i].className === 'chat-line') {
+						//this is for bttv users
 						currNode = mutation.addedNodes[i];
+					}
+					if (currNode) {
+						var msgNode = currNode.querySelector(".message");
 						var newDanmaku = {
-							color: currNode.querySelector("li .from").style.color,
-							content: currNode.querySelector("li .message").innerHTML
+							color: currNode.querySelector(".from").style.color,
+							content: msgNode.innerHTML
 						}
 						// calculate danmaku length
-						var emojiCount = currNode.querySelector("li .message").querySelectorAll("img").length;
-						var pureText = currNode.querySelector("li .message").textContent;
+						var emojiCount = msgNode.querySelectorAll("img").length;
+						var pureText = msgNode.textContent;
 						var pureTextLength = pureText.length;
 						var fontsize = /[\u3400-\u9FBF]/.test(pureText)?35:22;
 						newDanmaku.dmLength =  (pureTextLength + emojiCount*4)*fontsize; //22 = fontsize
