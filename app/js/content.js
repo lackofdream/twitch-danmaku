@@ -37,7 +37,7 @@
 	var chatOb = new MutationObserver(newChatMsgHandler);
 	var chatObConfig = { childList: true };
 
-	var dmBtn = "<span><a class='button primary dark' id='dmTogglelBtn'><span>Turn Danmaku OFF</span></a></span>"
+	var dmBtn = "<dd class='cn-tabs__button'><a class='button primary dark' id='dmTogglelBtn'><span>Turn Danmaku OFF</span></a></dd>"
 
 	/***************Construct Danmaku Object*********************/
 	var Danmaku = function (basicInfo) {
@@ -204,10 +204,10 @@
 	}
     
     function insertToggleBtn () {
-    	if ( $(".channel-actions").length ) {
+    	if ( $(".cn-tabs--2").length ) {
     		clearInterval(chkActionItv);
     		if ( $("#dmTogglelBtn").length === 0 ) {
-	    		$(".channel-actions").append(dmBtn);
+	    		$(".cn-tabs--2").append(dmBtn);
 	    		$( "#dmTogglelBtn" ).click(toggleDanmu);
     		};
     	};
