@@ -231,10 +231,8 @@
 			if ( numOfNodeAdded > 0) {
 				for (var i = 0; i < numOfNodeAdded; i++) {
 					var currNode= null;
-					if (mutation.addedNodes[i].className === 'ember-view') {
-						currNode = mutation.addedNodes[i].querySelector("li");
-					} else if (mutation.addedNodes[i].className === 'chat-line') {
-						//this is for bttv users
+					
+					if ((mutation.addedNodes[i].className+'').indexOf('chat-line') > -1) {
 						currNode = mutation.addedNodes[i];
 					}
 					if (currNode) {
