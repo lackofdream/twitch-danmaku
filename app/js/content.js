@@ -26,6 +26,8 @@
 	var chkPlayerItv = null;
 	var chkHeightItv = null;
 
+	var chatLines = '.chat-list__lines .full-height.flex-grow-1.pd-b-1';
+
 	var containerH=0;
 	var containerW=0;
 	var tracks = null;
@@ -65,7 +67,7 @@
 		if (isPlayerReady) {
 			containerH = $(".player-fullscreen-overlay").height();
 			containerW = $(".player-fullscreen-overlay").width();
-
+			
 			tracks = new Array(Math.floor(containerH/28));
 			for (var i = 0; i < tracks.length; i++) {
 				tracks[i] = {
@@ -195,7 +197,7 @@
 	}
 
 	function checkChat () {
-		if ( $(".chat-lines").length ) {
+		if ( $(chatLines).length ) {
     		clearInterval(chkChatItv);
     		isChatReady = true;
     		console.log("checkChat.....");
@@ -204,10 +206,10 @@
 	}
     
     function insertToggleBtn () {
-    	if ( $(".cn-tabs--2").length ) {
+		if ( $(".chat-buttons-container.flex.justify-content-between.mg-t-1").length ) {
     		clearInterval(chkActionItv);
     		if ( $("#dmTogglelBtn").length === 0 ) {
-	    		$(".cn-tabs--2").append(dmBtn);
+	    		$(".chat-buttons-container.flex.justify-content-between.mg-t-1").append(dmBtn);
 	    		$( "#dmTogglelBtn" ).click(toggleDanmu);
     		};
     	};
@@ -232,14 +234,14 @@
 				for (var i = 0; i < numOfNodeAdded; i++) {
 					var currNode= null;
 					
-					if ((mutation.addedNodes[i].className+'').indexOf('chat-line') > -1) {
+					if ((mutation.addedNodes[i].className+'').indexOf('chat-line__message') > -1) {
 						currNode = mutation.addedNodes[i];
 					}
 					if (currNode) {
-						var msgNode = currNode.querySelector(".message");
+						var msgNode = currNode;
 						var newDanmaku = {
-							color: currNode.querySelector(".from").style.color,
-							content: msgNode.innerHTML
+							color: currNode.querySelector(".chat-author__display-name").style.color,
+							content: msgNode.querySelector("span[data-a-target='chat-message-text']").innerHTML
 						}
 						// calculate danmaku length
 						var emojiCount = msgNode.querySelectorAll("img").length;
@@ -258,9 +260,8 @@
 
     function startDanmaku () {
     	console.log("Start Danmaku.");
-       	var chatRoom = document.querySelector('.chat-lines');
+       	var chatRoom = document.querySelector(chatLines);
     	if ( chatRoom !== null ) {
-    		console.log("Start observing.");
     		chatOb.observe(chatRoom, chatObConfig);
     	}
     	chkHeightItv = setInterval(chkHeight, 500);
