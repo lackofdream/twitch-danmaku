@@ -26,7 +26,8 @@
 	var chkPlayerItv = null;
 	var chkHeightItv = null;
 
-	var chatLines = '.chat-list__lines .full-height.flex-grow-1.pd-b-1';
+	var chatLines = '.tw-full-height.tw-flex-grow-1.tw-pd-b-1';
+	var buttonContainer = ".chat-input__buttons-container"
 
 	var containerH=0;
 	var containerW=0;
@@ -39,7 +40,7 @@
 	var chatOb = new MutationObserver(newChatMsgHandler);
 	var chatObConfig = { childList: true };
 
-	var dmBtn = "<dd class='cn-tabs__button'><a class='button primary dark' id='dmTogglelBtn'><span>Turn Danmaku OFF</span></a></dd>"
+    var dmBtn = '<button id="dmTogglelBtn" class="tw-button"><span class="tw-button__text">Turn Danmaku OFF</span></button>'
 
 	/***************Construct Danmaku Object*********************/
 	var Danmaku = function (basicInfo) {
@@ -206,10 +207,10 @@
 	}
     
     function insertToggleBtn () {
-		if ( $(".chat-buttons-container.flex.justify-content-between.mg-t-1").length ) {
+		if ( $(buttonContainer).length ) {
     		clearInterval(chkActionItv);
     		if ( $("#dmTogglelBtn").length === 0 ) {
-	    		$(".chat-buttons-container.flex.justify-content-between.mg-t-1").append(dmBtn);
+	    		$(buttonContainer).append(dmBtn);
 	    		$( "#dmTogglelBtn" ).click(toggleDanmu);
     		};
     	};

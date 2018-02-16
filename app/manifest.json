@@ -3,7 +3,7 @@
 
   "name": "Twitch Danmaku",
   "description": "Display Twitch chat messages on streaming player.",
-  "version": "1.1.4",
+  "version": "1.1.5",
 
   "icons": {
     "16": "assets/icon-16.png",
