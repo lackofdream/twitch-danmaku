@@ -27,7 +27,8 @@
 	var chkHeightItv = null;
 
 	var chatLines = '.tw-full-height.tw-flex-grow-1.tw-pd-b-1';
-	var buttonContainer = ".chat-input__buttons-container"
+	var buttonContainer = ".chat-input__buttons-container";
+	var playerOverlay = ".player-fullscreen-overlay";
 
 	var containerH=0;
 	var containerW=0;
@@ -57,7 +58,7 @@
 	}
 
 	Danmaku.prototype.putOnScreen = function() {
-		$(".player-fullscreen-overlay").append(this.markUp);
+		$(playerOverlay).append(this.markUp);
 	};
 
 	/************************************************************/
@@ -66,8 +67,8 @@
 
 	function initTracks() {
 		if (isPlayerReady) {
-			containerH = $(".player-fullscreen-overlay").height();
-			containerW = $(".player-fullscreen-overlay").width();
+			containerH = $(playerOverlay).height();
+			containerW = $(playerOverlay).width();
 			
 			tracks = new Array(Math.floor(containerH/28));
 			for (var i = 0; i < tracks.length; i++) {
@@ -94,7 +95,7 @@
 	}
 
 	function pushDanmaku(dm) {
-		containerW = $(".player-fullscreen-overlay").width();
+		containerW = $(playerOverlay).width();
 
 		var findOneSpot = false;
 		var idx = 0;
@@ -181,7 +182,7 @@
 	}
 
 	function checkPlayer () {
-		if ( $(".player-fullscreen-overlay").length ) {
+		if ( $(playerOverlay).length ) {
     		clearInterval(chkPlayerItv);
     		isPlayerReady = true;
     		console.log("checkPlayer.....");
@@ -190,7 +191,8 @@
 	}
 
 	function chkHeight () {
-		var currentHeight = $(".player-fullscreen-overlay").height();
+		$(playerOverlay).css('display', 'block');
+		var currentHeight = $(playerOverlay).height();
 		if (currentHeight!==containerH) {
 			containerH = currentHeight;
 			updateTracks();
@@ -272,7 +274,7 @@
     	console.log("Stop Danmaku.");
     	clearInterval(chkHeightItv);
 		chatOb.disconnect();
-		$(".player-fullscreen-overlay").text(" ");
+		$(playerOverlay).text(" ");
     }
 
 })();
